@@ -2,6 +2,8 @@ package com.revature.eval.java.core;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EvaluationService {
 
@@ -15,7 +17,14 @@ public class EvaluationService {
 	 */
 	public String acronym(String phrase) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		String[] words = phrase.split(" |-"); 
+		String result = "";
+		for (String s: words) {
+			result += s.toUpperCase().charAt(0);
+			
+		}
+		//System.out.println(result);
+		return result;
 	}
 
 	/**
@@ -35,7 +44,38 @@ public class EvaluationService {
 	 */
 	public int getScrabbleScore(String string) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		char[] charArray = string.toLowerCase().toCharArray();
+		int result = 0;
+		
+		//System.out.println(charArray[0]);
+		 for (int i = 0; i < charArray.length; i++) { 
+			 //System.out.print(charArray[i]);
+			if (charArray[i] == 'a' || charArray[i] == 'e' || 
+				charArray[i] == 'i' || charArray[i] == 'o' || 
+				charArray[i] == 'u' || charArray[i] == 'l' || 
+				charArray[i] == 'n' || charArray[i] == 'r' || 
+				charArray[i] == 's' || charArray[i] == 't' ) {
+				result += 1;
+				//System.out.println(charArray[i]);
+			} else if (charArray[i] == 'f' || charArray[i] == 'h' ||
+					   charArray[i] == 'v' || charArray[i] == 'w' ||
+					   charArray[i] == 'y') {
+				result += 4;
+			} else if (charArray[i] == 'd' || charArray[i] == 'g') {
+				result += 2;
+			} else if (charArray[i] == 'b' || charArray[i] == 'c' || 
+					   charArray[i] == 'm' ||    charArray[i] == 'p') {
+				result += 3;
+			} else if (charArray[i] == 'k') {
+				result += 5;
+			} else if (charArray[i] == 'j' || charArray[i] == 'x') {
+				result += 8;
+			} else if (charArray[i] == 'q' || charArray[i] == 'z') {
+				result += 10;
+			} 
+		 }
+		//System.out.println(result);
+		return result;
 	}
 
 	/**
@@ -61,8 +101,11 @@ public class EvaluationService {
 	 * 
 	 * For example, the inputs
 	 * 
-	 * +1 (613)-995-0253 613-995-0253 1 613 995 0253 613.995.0253 should all produce
-	 * the output
+	 * +1 (613)-995-0253 
+	 *    613-995-0253
+	 *  1 613 995 0253
+	 *    613.995.0253 
+	 * should all produce the output
 	 * 
 	 * 6139950253
 	 * 
@@ -71,21 +114,60 @@ public class EvaluationService {
 	 */
 	public String cleanPhoneNumber(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		// this will filter all numerical number
+		String[] words = string.split("\\D"); 
+		String result = "";
+		if (string == null || string.isEmpty()) {
+			return result;
+		}
+		// get all the numerical numbers in one (by concatenating) 
+		for (String s: words) {
+			result += s;
+		}
+		// throw "IllegalArgumentException" when digit is greater or less than 10
+		if (result.length() > 10 || result.length() < 10 ) {
+			throw new IllegalArgumentException();
+		}		
+		return result;
 	}
 
 	/**
 	 * 4. Given a phrase, count the occurrences of each word in that phrase.
 	 * 
-	 * For example for the input "olly olly in come free" olly: 2 in: 1 come: 1
-	 * free: 1
-	 * 
+	 * For example for the input "olly olly in come free" 
+	 * Output: olly: 2 in: 1 
+	 * 		   come: 1 free: 1
 	 * @param string
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		
+		Map<String, Integer> resultWordCount = new HashMap<>();
+		if (string == null || string.isEmpty())
+			return resultWordCount;
+		// splitting words which has empty space, newline character and comma
+		String[] words = string.split("\\s|,|\\n"); 
+		
+		Integer numberWords = new Integer(0);
+		// for each loop to iterate through each words
+		for (String s: words) {		
+			// checks if given word in HashMap is 
+			// already exist then increment it's count by 1
+			if (!s.equals("")) {
+				if (resultWordCount.containsKey(s)) { 
+					numberWords = resultWordCount.get(s);
+					resultWordCount.put(s, numberWords + 1);
+				} else { 
+					// if word is not exist then simply put into HashMap and count it's number to 1
+					resultWordCount.put(s, 1);
+				}
+			}
+		}
+//		for (Map.Entry<String, Integer> entry : resultWordCount.entrySet()) {
+//			System.out.println(entry.getKey() + " " + entry.getValue());
+//		}
+		return resultWordCount;
 	}
 
 	/**
@@ -125,10 +207,29 @@ public class EvaluationService {
 	 */
 	static class BinarySearch<T> {
 		private List<T> sortedList;
-
+		// TODO Write an implementation for this method declaration
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			int lowerIndex = 0;
+			int upperIndex = sortedList.size() - 1;
+			int middleIndex = (upperIndex + lowerIndex) / 2;
+			
+			while (lowerIndex <= upperIndex) {
+				middleIndex = (upperIndex + lowerIndex) / 2;
+				
+				if (middleIndex == sortedList.indexOf(t)) {
+					//System.out.println(middleIndex);
+					return middleIndex;
+				} else if (middleIndex < sortedList.indexOf(t)) {
+					lowerIndex = middleIndex + 1;
+				} else { upperIndex = middleIndex - 1; }
+			}
+			
+//			for (int i = lowerIndex; i < sortedList.size(); i++) {
+//				if (sortedList.get(i).equals(t)) {
+//					return i;
+//				}
+//			}
+			return middleIndex;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -152,18 +253,34 @@ public class EvaluationService {
 	 * 
 	 * For example:
 	 * 
-	 * 9 is an Armstrong number, because 9 = 9^1 = 9 10 is not an Armstrong number,
-	 * because 10 != 1^2 + 0^2 = 2 153 is an Armstrong number, because: 153 = 1^3 +
-	 * 5^3 + 3^3 = 1 + 125 + 27 = 153 154 is not an Armstrong number, because: 154
-	 * != 1^3 + 5^3 + 4^3 = 1 + 125 + 64 = 190 Write some code to determine whether
-	 * a number is an Armstrong number.
+	 * 9 is an Armstrong number, because 9 = 9^1 = 9 
+	 * 10 is not an Armstrong number,because 10 != 1^2 + 0^2 = 2 
+	 * 153 is an Armstrong number, because: 153 = 1^3 + 5^3 + 3^3 = 1 + 125 + 27 = 153
+	 * 154 is not an Armstrong number, because: 154 != 1^3 + 5^3 + 4^3 = 1 + 125 + 64 = 190 
+	 * Write some code to determine whether a number is an Armstrong number.
 	 * 
 	 * @param input
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
 		// TODO Write an implementation for this method declaration
-		return false;
+		int digitCount = 0, sum = 0;
+		int inputCopy = input;
+		// getting the number of digits
+		while (inputCopy > 0) {
+			inputCopy /= 10;
+			digitCount++;
+		}
+		//System.out.println("digitCount: " + digitCount); 
+		inputCopy = input;
+		while (inputCopy != 0) {
+			int r = inputCopy % 10;
+			sum += Math.pow(r, digitCount);
+			inputCopy /= 10;
+			
+		}
+		//System.out.println("sum: " + sum);
+		return (sum == input); 
 	}
 
 	/**
@@ -178,7 +295,26 @@ public class EvaluationService {
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		
+		// less than 2 is not prime
+		// loop from 2 to n-1
+		List<Long> primeFactor = new ArrayList<>();
+	
+		if (l < 2L) return null;
+		long j = 2L;
+		while (j <= l) {
+			if (l % j == 0) {
+				primeFactor.add(j);
+				// update 'l' values every time it's divisible by 2L
+				l /= j;
+			} else j += 1L; // else increment 'j' value by 1L
+			//calculatePrimeFactorsOf(l);
+		}
+		
+//		for (int i = 0; i < primeFactor.size(); i++) {
+//			System.out.println(primeFactor.get(i));
+//		}
+		return primeFactor;
 	}
 
 
@@ -207,7 +343,6 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-
 		/**
 		 * Question 8
 		 * 
@@ -216,7 +351,24 @@ public class EvaluationService {
 		 */
 		public static String encode(String string) {
 			// TODO Write an implementation for this method declaration
-			return null;
+			// Creating a string having reversed alphabetical order 
+	        String reverseAlphabet = "zyxwvutsrqponmlkjihgfedcba", reverseString = ""; 
+	        String lowerString = string.toLowerCase().replaceAll("\\s|\\.|\\,","");
+	     
+	        int j = 0;	        
+	        for (int i = 0; i < lowerString.length(); i++) {
+	        	// to add space after 5th character
+	        	if (j == 5) {
+	        		j = 0;
+	        		reverseString += " ";
+	        	}
+	        	
+	        	if (Character.isDigit(lowerString.charAt(i))) reverseString += lowerString.charAt(i);
+	        	else reverseString += reverseAlphabet.charAt(lowerString.charAt(i) - 'a'); 
+	        	j++;
+	        	
+	        }
+	        return reverseString; 
 		}
 
 		/**
@@ -227,7 +379,7 @@ public class EvaluationService {
 		 */
 		public static String decode(String string) {
 			// TODO Write an implementation for this method declaration
-			return null;
+			return encode(string).replaceAll(" ", "");
 		}
 	}
 
@@ -260,7 +412,17 @@ public class EvaluationService {
 	 */
 	public int solveWordProblem(String string) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		String[] words = string.split(" |\\?"); // this will filter all numerical number
+
+		if (words[3].equals("plus")) {
+			return Integer.parseInt(words[2]) + Integer.parseInt(words[4]);
+		} else if (words[3].equals("minus")) {
+			return Integer.parseInt(words[2]) - Integer.parseInt(words[4]);
+		} else if (words[3].equals("multiplied")) {
+			return Integer.parseInt(words[2]) * Integer.parseInt(words[5]);
+		} else if (words[3].equals("divided")) {
+			return Integer.parseInt(words[2]) / Integer.parseInt(words[5]);
+		} else return 0;
 	}
 
 }
